@@ -119,7 +119,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0,0,0,0.85);
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.3s;
@@ -127,52 +127,89 @@
 
         .modal-content {
             background-color: #fff;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 30px;
+            border-radius: 25px;
             text-align: center;
             position: relative;
-            width: 300px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
-            animation: scaleUp 0.3s;
+            width: 340px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .modal-content h3 {
-            margin-bottom: 15px;
-            color: #333;
+        .qr-container {
+            background: #fdfdfd;
+            border: 1px solid #f0f0f0;
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 10px;
         }
 
         .qr-image {
             width: 100%;
-            max-width: 250px;
+            max-width: 200px;
             height: auto;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .copy-box {
+            background: #f4fbf4;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1.5px solid #e0f2e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-box:hover {
+            background: #edf7ed;
+            border-color: #7BB32E;
+        }
+
+        .copy-box:active {
+            transform: scale(0.96);
+        }
+
+        .id-label {
+            display: block;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .wechat-id {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .wechat-id i {
+            font-size: 14px;
+            color: #7BB32E;
         }
 
         .close-btn {
             position: absolute;
-            top: 10px;
+            top: 15px;
             right: 15px;
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
+            color: #ccc;
+            font-size: 24px;
             cursor: pointer;
-            transition: color 0.3s;
+            transition: color 0.2s;
         }
 
         .close-btn:hover {
-            color: #000;
+            color: #333;
         }
 
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
-        @keyframes scaleUp {
-            from {transform: scale(0.8);}
-            to {transform: scale(1);}
-        }
-
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes scaleUp { from {transform: scale(0.8);} to {transform: scale(1);} }
     </style>
 </head>
 <body>
@@ -181,45 +218,34 @@
         <div class="avatar-container">
             <img src="https://i.ibb.co/nq1tmx2v/6f399072-134f-46f7-b676-588dd97937d3.jpg" alt="Avatar" class="avatar">
         </div>
-
         <h2 class="name">Ngoc Anh</h2>
-
-        <p class="bio">
-            Ngoc Anh khoai to
-        </p>
-
+        <p class="bio">Ngọc Anh khoai to</p>
         <div class="social-buttons">
-            <a href="https://facebook.com/just.anhie" class="btn btn-fb" target="_blank">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-
-            <a href="https://discord.com/users/1430158938652934249" class="btn btn-discord" target="_blank" title="Discord">
-                <i class="fab fa-discord"></i>
-            </a>
-
-            <a href="https://tiktok.com/@Just.anhie" class="btn btn-tiktok" target="_blank">
-                <i class="fa-brands fa-tiktok"></i>
-            </a>
-
-            <a href="https://instagram.com/Just.anhie" class="btn btn-ig" target="_blank">
-                <i class="fab fa-instagram"></i>
-            </a>
-
-            <a href="https://locket.cam/nganh.09" class="btn btn-locket" target="_blank" title="Locket">
-                <i class="fa-solid fa-heart"></i>
-            </a>
-
-            <a href="#" class="btn btn-wechat" id="wechatBtn" title="WeChat">
-                <i class="fab fa-weixin"></i>
-            </a>
+            <a href="https://facebook.com/just.anhie" class="btn btn-fb" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://discord.com/users/1430158938652934249" class="btn btn-discord" target="_blank"><i class="fab fa-discord"></i></a>
+            <a href="https://tiktok.com/@Just.anhie" class="btn btn-tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://instagram.com/Just.anhie" class="btn btn-ig" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="btn btn-locket" target="_blank"><i class="fa-solid fa-heart"></i></a>
+            <a href="#" class="btn btn-wechat" id="wechatBtn"><i class="fab fa-weixin"></i></a>
         </div>
     </div>
 
     <div id="qrModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <h3>Scan WeChat</h3>
-            <img src="https://i.ibb.co/6RDCqmSz/qr-1x1-v2.jpg" alt="WeChat QR Code" class="qr-image">
+            <h3 style="color: #333; margin-bottom: 5px; font-weight: 600;">WeChat</h3>
+            
+            <div class="qr-container">
+                <img src="https://i.ibb.co/nq1tmx2v/6f399072-134f-46f7-b676-588dd97937d3.jpg" alt="QR Code" class="qr-image">
+                
+                <div class="copy-box" id="copyBtn">
+                    <span class="id-label" id="statusText">Nhấn để sao chép ID</span>
+                    <div class="wechat-id">
+                        <span id="idToCopy">_Justanhie</span>
+                        <i class="fa-regular fa-copy"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -237,26 +263,31 @@
             var modal = document.getElementById("qrModal");
             var btn = document.getElementById("wechatBtn");
             var span = document.getElementsByClassName("close-btn")[0];
+            var copyBtn = document.getElementById("copyBtn");
+            var statusText = document.getElementById("statusText");
 
-            btn.onclick = function(event) {
-                event.preventDefault();
+            btn.onclick = function(e) {
+                e.preventDefault();
                 modal.style.display = "flex";
             }
 
-            span.onclick = function() {
-                modal.style.display = "none";
+            span.onclick = function() { modal.style.display = "none"; }
+            window.onclick = function(event) {
+                if (event.target == modal) { modal.style.display = "none"; }
             }
 
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
+            copyBtn.onclick = function() {
+                var text = document.getElementById("idToCopy").innerText;
+                navigator.clipboard.writeText(text).then(function() {
+                    statusText.innerText = "Đã sao chép thành công!";
+                    statusText.style.color = "#7BB32E";
+                    setTimeout(function() {
+                        statusText.innerText = "Nhấn để sao chép ID";
+                        statusText.style.color = "#888";
+                    }, 2000);
+                });
             }
         });
     </script>
-
 </body>
 </html>
-
-
-
