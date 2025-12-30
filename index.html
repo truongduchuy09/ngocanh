@@ -42,16 +42,15 @@
         }
 
         .profile-card {
-            background: ;
-            backdrop-filter: ;
-            width: 450px;
-            padding: 50px;
+            width: 500px;
+            padding: 50px 30px;
             border-radius: 30px;
             text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             transition: transform 0.3s ease;
             position: relative;
             z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .profile-card:hover {
@@ -110,6 +109,20 @@
             transition: all 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             cursor: pointer; 
+            border: none;
+        }
+
+        .btn-zalo { 
+            background: #ffffff !important; 
+            padding: 0; 
+            overflow: hidden;
+        }
+        
+        .btn-zalo img {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover; 
+            display: block;
         }
 
         .btn-fb { background: #1877f2; }
@@ -122,8 +135,10 @@
         .btn:hover {
             transform: scale(1.1);
             filter: brightness(1.1);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -179,10 +194,6 @@
             border-color: #7BB32E;
         }
 
-        .copy-box:active {
-            transform: scale(0.96);
-        }
-
         .id-label {
             display: block;
             font-size: 11px;
@@ -202,11 +213,6 @@
             gap: 8px;
         }
 
-        .wechat-id i {
-            font-size: 14px;
-            color: #7BB32E;
-        }
-
         .close-btn {
             position: absolute;
             top: 15px;
@@ -217,12 +223,18 @@
             transition: color 0.2s;
         }
 
-        .close-btn:hover {
-            color: #333;
-        }
+        .close-btn:hover { color: #333; }
 
         @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
         @keyframes scaleUp { from {transform: scale(0.8);} to {transform: scale(1);} }
+
+        /* Responsive Mobile */
+        @media (max-width: 550px) {
+            .profile-card {
+                width: 90%;
+                padding: 40px 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -235,6 +247,7 @@
         <p class="bio">Ngọc Anh khoai to</p>
         <div class="social-buttons">
             <a href="https://facebook.com/just.anhie" class="btn btn-fb" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="btn btn-zalo" id="zaloBtn"><img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo-Arc.png" alt="Zalo"></a>
             <a href="https://discord.com/users/1430158938652934249" class="btn btn-discord" target="_blank"><i class="fab fa-discord"></i></a>
             <a href="https://tiktok.com/@Just.anhie" class="btn btn-tiktok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
             <a href="https://instagram.com/Just.anhie" class="btn btn-ig" target="_blank"><i class="fab fa-instagram"></i></a>
@@ -247,10 +260,8 @@
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h3 style="color: #333; margin-bottom: 5px; font-weight: 600;">WeChat</h3>
-            
             <div class="qr-container">
                 <img src="https://i.imgur.com/ecmmSKn.png" alt="QR Code" class="qr-image">
-                
                 <div class="copy-box" id="copyBtn">
                     <span class="id-label" id="statusText">Nhấn để sao chép ID</span>
                     <div class="wechat-id">
@@ -262,48 +273,64 @@
         </div>
     </div>
 
+    <div id="zaloModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn-zalo close-btn">&times;</span>
+            <h3 style="color: #333; margin-bottom: 5px; font-weight: 600;">Zalo</h3>
+            <div class="qr-container">
+                <img src="https://i.imgur.com/ecmmSKn.png" alt="Avatar" class="qr-image">
+                <div class="copy-box" id="copyZaloBtn">
+                    <span class="id-label" id="statusZaloText">Nhấn để sao chép SĐT</span>
+                    <div class="wechat-id">
+                        <span id="zaloToCopy">0338751657</span> 
+                        <i class="fa-regular fa-copy"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var avatarSrc = document.querySelector('.avatar').src;
-            var link = document.querySelector("link[rel~='icon']");
-            if (!link) {
-                link = document.createElement('link');
-                link.rel = 'icon';
-                document.head.appendChild(link);
+            // Hàm xử lý Modal
+            function setupModal(btnId, modalId, closeClass, copyBtnId, copyTextId, statusTextId) {
+                var modal = document.getElementById(modalId);
+                var btn = document.getElementById(btnId);
+                var span = document.getElementsByClassName(closeClass)[0];
+                var copyBtn = document.getElementById(copyBtnId);
+                var statusText = document.getElementById(statusTextId);
+
+                if(!btn || !modal) return;
+
+                btn.onclick = function(e) {
+                    e.preventDefault();
+                    modal.style.display = "flex";
+                }
+
+                span.onclick = function() { modal.style.display = "none"; }
+                
+                copyBtn.onclick = function() {
+                    var text = document.getElementById(copyTextId).innerText;
+                    navigator.clipboard.writeText(text).then(function() {
+                        statusText.innerText = "Đã sao chép thành công!";
+                        statusText.style.color = "#7BB32E";
+                        setTimeout(function() {
+                            statusText.innerText = "Nhấn để sao chép";
+                            statusText.style.color = "#888";
+                        }, 2000);
+                    });
+                }
             }
-            link.href = avatarSrc;
 
-            var modal = document.getElementById("qrModal");
-            var btn = document.getElementById("wechatBtn");
-            var span = document.getElementsByClassName("close-btn")[0];
-            var copyBtn = document.getElementById("copyBtn");
-            var statusText = document.getElementById("statusText");
+            setupModal("wechatBtn", "qrModal", "close-btn", "copyBtn", "idToCopy", "statusText");
+            setupModal("zaloBtn", "zaloModal", "close-btn-zalo", "copyZaloBtn", "zaloToCopy", "statusZaloText");
 
-            btn.onclick = function(e) {
-                e.preventDefault();
-                modal.style.display = "flex";
-            }
-
-            span.onclick = function() { modal.style.display = "none"; }
             window.onclick = function(event) {
-                if (event.target == modal) { modal.style.display = "none"; }
-            }
-
-            copyBtn.onclick = function() {
-                var text = document.getElementById("idToCopy").innerText;
-                navigator.clipboard.writeText(text).then(function() {
-                    statusText.innerText = "Đã sao chép thành công!";
-                    statusText.style.color = "#7BB32E";
-                    setTimeout(function() {
-                        statusText.innerText = "Nhấn để sao chép ID";
-                        statusText.style.color = "#888";
-                    }, 2000);
-                });
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = "none";
+                }
             }
         });
     </script>
 </body>
 </html>
-
-
-
